@@ -14,6 +14,25 @@ var questao1RespRouter = require('./public/javascripts/questao1');
 
 var app = express();
 
+var session = require('express-session'), Redistore = require('connect-redis')(session);
+
+var sessionStore = new Redistore({
+	host : 'localhost',
+	port: 6379,
+	ttl : (60000 * 24 *30),
+	pass : ''
+});
+
+app.use(session({
+	resalve: false,
+	saveUninitialized: false,
+	name : 'COOKIE_NAME',
+	secret : 'COOKIE_PASS',
+	store : sessionStore,
+	cookie : {magAge : (60000 * 24 * 30)},
+	resave : false
+}));
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
